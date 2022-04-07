@@ -2,7 +2,7 @@ import * as React from "react";
 // @ts-ignore
 // import lessStyle from './index.less';
 import "./index.less";
-import Test from "../assets/test.jpg";
+import Test from "../../../assets/test.jpg";
 
 interface IProps {
     /**

@@ -15,7 +15,9 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
     "paths": {
-      "@src/*": ["./app/renderer/*"] // webpack配置别名
+      "@src/*": ["./app/renderer/*"], // webpack配置别名
+      "@assets/*": ["./assets/*"],
+      "@common/*": ["./app/renderer/common/*"]
     },
     "moduleResolution": "node"
   },
