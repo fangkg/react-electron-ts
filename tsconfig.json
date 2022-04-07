@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2016", // 编译结果使用的版本标准
+    "module": "commonjs", // 编译结果使用的模块化标准
+    "lib": [
+      "ESNext",
+      "DOM"
+    ], // 写ts时支持的环境，默认支持浏览器环境。如果需要支持node，安装@type/node
+    "jsx": "react",
+    "sourceMap": true,
+    "strict": true,
+    "declaration": true,
+    "removeComments": true, // 编译结果把ts注释移除
+    "esModuleInterop": true, // es6的模块化和非es6的模块化标准互通
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "paths": {
+      "@src/*": ["./app/renderer/*"] // webpack配置别名
+    },
+    "moduleResolution": "node"
+  },
+  "exclude": ["dist", "node_modules"],
+  "include": ["app/**/*.ts", "app/**/*.tsx", "app/**/*.d.ts"]
+}
