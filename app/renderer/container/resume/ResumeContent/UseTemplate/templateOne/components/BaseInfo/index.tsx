@@ -2,8 +2,7 @@
  * @description 基本信息
  * */
 import React from "react";
-// import "@src/container/templates/styles/template-one.less";
-import '../../../styles/template-one.less';
+import "@src/container/templates/styles/template-one.less";
 
 function BaseInfo(){
     return (

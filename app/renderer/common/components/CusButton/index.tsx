@@ -4,6 +4,7 @@
 
 import React from "react";
 import classnames from "classnames";
+import "./index.less";
 
 export interface Button {
     /**

@@ -2,8 +2,7 @@
  * @description 荣誉奖励
  * */
 import React from "react";
-// import "@src/container/templates/styles/template-one.less";
-import '../../../styles/template-one.less';
+import "@src/container/templates/styles/template-one.less";
 
 function Certificate(){
     return (
