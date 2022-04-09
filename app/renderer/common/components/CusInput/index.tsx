@@ -81,7 +81,7 @@ interface InputState {
     text: string | number;
 }
 
-export default class MyInput extends React.PureComponent<InputProps, InputState> {
+export default class CusInput extends React.PureComponent<InputProps, InputState> {
     input: HTMLInputElement | HTMLTextAreaElement | undefined;
 
     constructor(props: InputProps) {

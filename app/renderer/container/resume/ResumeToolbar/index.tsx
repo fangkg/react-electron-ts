@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {useDispatch} from "react-redux";
 import "./index.less";
 import CusScrollBox from "@common/components/CusScrollBox";
 import {RESUME_TOOLBAR_LIST} from "@common/constants/resume";
@@ -11,6 +12,7 @@ function ResumeToolbar(){
     // 定义已添加、未添加模块
     const [addToolbarList, setAddToolbarList] = useState<TSResume.SliderItem[]>([]);
     const [unAddToolbarList, setUnAddToolbarList] = useState<TSResume.SliderItem[]>([]);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if(RESUME_TOOLBAR_LIST.length > 0){
@@ -25,13 +27,27 @@ function ResumeToolbar(){
             });
             setAddToolbarList(_addToolbarList);
             setUnAddToolbarList(_unAddToolbarList);
+            changeResumeToolbarKeys(_addToolbarList.map(s => s.key));
         }
     }, [])
+
+    const changeResumeToolbarKeys = (moduleKeys: string[]) => {
+        if(moduleKeys.length > 0){
+            dispatch({
+                type: 'templateModel/setStore',
+                payload: {
+                    key: 'resumeToolbarKeys',
+                    values: moduleKeys
+                }
+            })
+        }
+    }
 
     // 添加模块
     const onAddSliderAction = (moduleToolbar: TSResume.SliderItem) => {
         const nextAddSliderList = onAddToolbar(addToolbarList, moduleToolbar);
         setAddToolbarList(nextAddSliderList);
+        changeResumeToolbarKeys(nextAddSliderList.map((s: TSResume.SliderItem) => s.key));
         const nextUnAddSliderList = onDeleteToolbar(unAddToolbarList, moduleToolbar);
         setUnAddToolbarList(nextUnAddSliderList);
     }
@@ -39,6 +55,7 @@ function ResumeToolbar(){
     const onDeleteSliderAction = (moduleSlider: TSResume.SliderItem) => {
         const nextAddSliderList = onDeleteToolbar(addToolbarList, moduleSlider);
         setAddToolbarList(nextAddSliderList);
+        changeResumeToolbarKeys(nextAddSliderList.map((s: TSResume.SliderItem) => s.key));
         const nextUnAddSliderList = onAddToolbar(unAddToolbarList, moduleSlider);
         setUnAddToolbarList(nextUnAddSliderList);
     }
