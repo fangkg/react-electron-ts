@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2016", // 编译结果使用的版本标准
+    "target": "esnext", // 编译结果使用的版本标准
     "module": "commonjs", // 编译结果使用的模块化标准
     "lib": [
       "ESNext",
@@ -15,8 +15,8 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
     "paths": {
-      "@src/*": ["./app/renderer/*"], // webpack配置别名
       "@assets/*": ["./assets/*"],
+      "@src/*": ["./app/renderer/*"],
       "@common/*": ["./app/renderer/common/*"]
     },
     "moduleResolution": "node"
