@@ -1,5 +1,6 @@
 import React from "react";
 import classnames from "classnames";
+import "./index.less"
 
 const TYPE = {
     text: 'text',
@@ -159,27 +160,27 @@ export default class CusInput extends React.PureComponent<InputProps, InputState
 
     renderBefore() {
         const {addonBefore} = this.props;
-        return !!addonBefore && <div styleName="my-input-center">
+        return !!addonBefore && <div styleName="cus-input-center">
             {addonBefore}
         </div>
     }
 
     renderAfter(){
         const {addonAfter} = this.props;
-        return !!addonAfter && <div styleName="my-input-center">
+        return !!addonAfter && <div styleName="cus-input-center">
             {addonAfter}
         </div>
     }
 
     renderClear(){
         const {allowClear} = this.props;
-        return !!allowClear && this.state.text && <i styleName="my-input-clear" onClick={this.onClear}/>
+        return !!allowClear && this.state.text && <i styleName="cus-input-clear" onClick={this.onClear}/>
     }
 
     renderInput(){
         const {placeholder, size = 'normal', maxLength, id, disabled, autoFocus} = this.props;
         return (
-            <div styleName={classnames('my-input-input', {
+            <div styleName={classnames('cus-input-input', {
                 [`${size}`]: true
             })}>
                 <input
@@ -199,7 +200,7 @@ export default class CusInput extends React.PureComponent<InputProps, InputState
         const _rows = rows || 3;
         const text = this.state.text;
         return (
-            <div styleName="my-input-textarea" style={{height: 24 * _rows}}>
+            <div styleName="cus-input-textarea" style={{height: 24 * _rows}}>
                 <textarea
                     {...{placeholder, maxLength, id, disabled, autoFocus}}
                     rows={_rows}
@@ -211,7 +212,7 @@ export default class CusInput extends React.PureComponent<InputProps, InputState
                 {this.renderClear()}
                 {
                     allowCount && (
-                        <div styleName="my-input-textarea-footer">
+                        <div styleName="cus-input-textarea-footer">
                             <span styleName={classnames({ 'max-length-text': !!maxLength && text && String(text).length >= maxLength})}>
                                 {String(text).length}
                             </span>
@@ -234,7 +235,7 @@ export default class CusInput extends React.PureComponent<InputProps, InputState
         const {bgTransparent = false, style, type, allowClear} = this.props;
         return (
             <div style={style}
-                styleName={classnames('my-input', {
+                styleName={classnames('cus-input', {
                     normal: !bgTransparent,
                     focus: this.state.focus,
                     'allow-clear': allowClear

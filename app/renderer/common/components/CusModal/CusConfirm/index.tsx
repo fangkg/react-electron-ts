@@ -5,7 +5,7 @@ import React from "react";
 import "./index.less";
 import CusButton from "@common/components/CusButton";
 import {IConfirmModal} from "@common/components/CusModal/types";
-import MyInput from "@common/components/CusInput";
+
 
 function CusConfirm({title, width, className, description, renderFooter, config = {}, eleRef}: IConfirmModal){
     const {deleteBtn = {isShow: false}, cancelBtn = {isShow: true}, submitBtn = {isShow: true}} = config;
