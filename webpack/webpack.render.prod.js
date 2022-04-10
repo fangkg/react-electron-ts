@@ -14,13 +14,13 @@ const prodConfig = {
     },
     target: 'electron-renderer',
     devtool: 'inline-source-map',
-    devServer: {
-        contentBase: path.join(__dirname, '../dist'),
-        compress: true,
-        host: '127.0.0.1',
-        port: 7001,
-        hot: true
-    },
+//     devServer: {
+//         contentBase: path.join(__dirname, '../dist'),
+//         compress: true,
+//         host: '127.0.0.1',
+//         port: 7001,
+//         hot: true
+//     },
     module: {
         rules: [
             {
