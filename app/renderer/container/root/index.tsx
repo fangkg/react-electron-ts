@@ -1,11 +1,13 @@
 import React, {useEffect} from "react";
 import "./index.less";
-import Logo from "@assets/test.jpg"
+import Logo from "@assets/logo.png"
 import {useHistory} from "react-router";
 import {shell} from "electron";
 import {ROUTER_KEY, ROUTER_ENTRY} from "@common/constants/router";
 import {isHttpOrHttpsUrl} from "@common/utils/router";
 import {useSelector, useDispatch} from "react-redux";
+import CusTheme from "@common/components/CusTheme";
+import useThemeActionHooks from "@src/hooks/useThemeActionHooks";
 
 function Root(){
     const appName = useSelector((state: any) => state.globalModel.appName);
@@ -35,11 +37,16 @@ function Root(){
         }
     }
 
-    return <div styleName="root">
+    const [currentTheme] = useThemeActionHooks.useGetCurrentTheme();
+
+    return <div styleName="root" style={{backgroundColor: currentTheme?.backgroundColor}}>
         <div className="container">
-            {/*<img src={Logo} alt=""/>*/}
+            <img src={Logo} alt=""/>
             <div styleName="title">VisResumeMooK</div>
             <div styleName="tips">react electron ts项目</div>
+            <div styleName="theme">
+                <CusTheme/>
+            </div>
             <div styleName="action">
                 {
                     ROUTER_ENTRY.map((router: TSRouter.Item) => {
