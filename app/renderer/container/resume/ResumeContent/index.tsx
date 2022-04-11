@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "./index.less";
-// 引入模板
 import * as UseTemplateList from "./UseTemplate";
+import {useParams} from "react-router";
 import CusScrollBox from "@common/components/CusScrollBox";
 import Messager, {MESSAGE_EVENT_NAME_MAPS} from "@common/messager";
 import Personal from "@src/container/resume/ResumeContent/UseForm/Personal";
@@ -10,9 +10,11 @@ import {RESUME_TOOLBAR_MAPS} from "@common/constants/resume";
 
 function ResumeContent(){
     const HEADER_ACTION_HEIGHT = 92;
-    const height = document.body.clientHeight;
+    // const height = document.body.clientHeight;
+    const [height, setHeight] = useState(0);
     const [formName, setFormName] = useState("");
     const [showFormModal, setShowFormModal] = useState(false);
+    const routerParams = useParams<{fromPath: string; templateId: string; templateIndex: string}>();
 
     /**
      * @description 接收订阅事件传参
@@ -25,6 +27,17 @@ function ResumeContent(){
         })
     }
 
+    const onClose = () => {
+        setShowFormModal(false);
+        setFormName("");
+    }
+
+    useEffect(() => {
+        if(document.body && document.body.clientHeight > 0) {
+            setHeight(document.body.clientHeight);
+        }
+    }, [document.body]);
+
     // 监听事件
     useEffect(() => {
         document.addEventListener(MESSAGE_EVENT_NAME_MAPS.OPEN_FORM_MODAL, onReceive);
@@ -34,7 +47,9 @@ function ResumeContent(){
     }, [])
     return (
         <CusScrollBox maxHeight={height - HEADER_ACTION_HEIGHT}>
-            <UseTemplateList.TemplateOne/>
+            {
+                routerParams?.templateId && Number(routerParams?.templateIndex) === 0 && <UseTemplateList.TemplateOne/>
+            }
             {
                 showFormModal && (
                     <>

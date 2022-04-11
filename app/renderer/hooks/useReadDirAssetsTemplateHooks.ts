@@ -16,10 +16,11 @@ export default function(){
                 // 构造模板列表
                 if(files.length > 0){
                     let templateList: TSTemplate.Item[] = [];
-                    for(const fileName of files){
-                        const base64URL = await fileAction.read(`${appPath}assets/template/${fileName}`, 'base64');
+                    for(let index = 0; index < files.length; index++){
+                        const base64URL = await fileAction.read(`${appPath}assets/template/${files[index]}`, 'base64');
                         templateList.push({
-                            templateName: fileName,
+                            templateName: files[index],
+                            templateIndex: index,
                             templateId: createUID(),
                             templateCover: `data:image/png;base64,${base64URL}`
                         })

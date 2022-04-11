@@ -4,14 +4,16 @@ import Logo from "@assets/logo.png"
 import {useHistory} from "react-router";
 import {shell} from "electron";
 import {ROUTER_KEY, ROUTER_ENTRY} from "@common/constants/router";
-import {isHttpOrHttpsUrl} from "@common/utils/router";
+import {isHttpOrHttpsUrl, compilePath} from "@common/utils/router";
 import {useSelector, useDispatch} from "react-redux";
 import CusTheme from "@common/components/CusTheme";
 import useThemeActionHooks from "@src/hooks/useThemeActionHooks";
 
+
 function Root(){
     const appName = useSelector((state: any) => state.globalModel.appName);
     const dispatch = useDispatch();
+    const selectTemplate = useSelector((state: any) => state.templateModel.selectTemplate);
 
     useEffect(() => {
         setTimeout(() => {
@@ -33,7 +35,15 @@ function Root(){
         if(isHttpOrHttpsUrl(router.url)){
             shell.openExternal(router.url)
         } else {
-            history.push(router.url)
+            if(router.key !== ROUTER_KEY.resume){
+                history.push(compilePath(router.url));
+            } else {
+                history.push(compilePath(router.url, {
+                    fromPath: ROUTER_KEY.root,
+                    templateId: selectTemplate?.templateId,
+                    templateIndex: selectTemplate?.templateIndex
+                }))
+            }
         }
     }
 
