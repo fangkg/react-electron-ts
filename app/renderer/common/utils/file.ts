@@ -33,7 +33,7 @@ const fileAction = {
      * @param {string} newPath 新地址
      * @returns {Promise}
      */
-    rename: (oldPath: string, newPath: string) => {
+    rename: (oldPath: string, newPath: string): Promise<void> => {
         return fsPromiseAPIs.rename(oldPath, newPath);
     },
     /**
@@ -41,7 +41,7 @@ const fileAction = {
      * @param path 路径
      * @returns {Promise}
      */
-    delete: (path: string) => {
+    delete: (path: string): Promise<void> => {
         return fsPromiseAPIs.unlink(path);
     },
     /**
@@ -49,7 +49,7 @@ const fileAction = {
      * @param path 路径
      * @returns {Promise}
      */
-    hasFile: (path: string) => {
+    hasFile: (path: string): Promise<void> => {
         return fsPromiseAPIs.access(path, fs.constants.F_OK);
     },
     /**
@@ -57,7 +57,7 @@ const fileAction = {
      * @param path 路径
      * @returns {Promise}
      */
-    canWrite: (path: string) => {
+    canWrite: (path: string): Promise<void> => {
         return fsPromiseAPIs.access(path, fs.constants.W_OK);
     },
     /**
@@ -65,8 +65,16 @@ const fileAction = {
      * @param path 路径
      * @returns {Promise}
      */
-    canRead: (path: string) => {
+    canRead: (path: string): Promise<void> => {
         return fsPromiseAPIs.access(path, fs.constants.R_OK);
+    },
+    /**
+     * @description 创建文件夹
+     * @param path 创建 /a/b/c，不管`/a` 和 /a/b 是否存在。
+     * @returns {Promise}
+     */
+    mkdirDir: (path: string): Promise<string | void> => {
+        return fsPromiseAPIs.mkdir(path, {recursive: true});
     }
 }
 

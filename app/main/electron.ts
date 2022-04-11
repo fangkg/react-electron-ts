@@ -1,10 +1,11 @@
 // electron主入口
 const path = require('path');
-const {app, BrowserWindow, ipcMain} = require('electron');
+const {app, BrowserWindow, ipcMain, dialog} = require('electron');
 
 function isDev(){
     return process.env.NODE_ENV === 'development';
 }
+
 
 function createWindow(){
     // 创建浏览器窗口
@@ -17,11 +18,23 @@ function createWindow(){
         }
     });
 
+    const settingWindow = new BrowserWindow({
+        width: 720,
+        height: 240,
+        resizable: false,
+        webPreferences: {
+            devTools: true,
+            nodeIntegration: true
+        }
+    })
+
     if(isDev()){
         // 开发环境下 加载运行在7001端口的react
         mainWindow.loadURL(`http://127.0.0.1:7001`);
+        settingWindow.loadURL(`http://127.0.0.1:7001/setting.html`);
     } else {
-        mainWindow.loadURL(`file://${path.join(__dirname, '../dist/index.html')}`)
+        mainWindow.loadURL(`file://${path.join(__dirname, '../dist/index.html')}`);
+        settingWindow.loadURL(`file://${path.join(__dirname, '../dist/setting.html')}`);
     }
 //     mainWindow.loadFile('index.html');
 }
@@ -40,4 +53,14 @@ const ROOT_PATH = path.join(app.getAppPath(), "../");
 // 监听渲染进程消息并回复
 ipcMain.on('get-root-path', (event, arg) => {
     event.reply('reply-root-path', ROOT_PATH);
+})
+
+ipcMain.on('open-save-resume-path', (event, arg) => {
+    dialog.showOpenDialog({
+        properties: ['openDirectory']
+    }).then((result) => {
+        event.reply('reply-save-resume-path', result.filePaths)
+    }).catch((err) => {
+        event.reply('reply-save-resume-path', err);
+    })
 })

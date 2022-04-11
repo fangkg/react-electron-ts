@@ -6,6 +6,7 @@ import ROUTER from "@common/constants/router";
 import TemplateList from "@src/container/templateList";
 import useReadDirAssetsTemplateHooks from "@src/hooks/useReadDirAssetsTemplateHooks";
 import useThemeActionHooks from "@src/hooks/useThemeActionHooks";
+import {ipcRenderer} from "electron";
 
 function Router(){
     const readDirAssetsTemplateHooks = useReadDirAssetsTemplateHooks();

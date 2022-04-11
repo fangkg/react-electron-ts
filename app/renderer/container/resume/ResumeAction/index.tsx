@@ -6,14 +6,55 @@ import CusButton from "@common/components/CusButton";
 import {toPrintPdf} from "@common/utils/htmlToPdf";
 import {useSelector} from "react-redux";
 import CusModal from "@common/components/CusModal";
+import fileAction from "@common/utils/file";
+import {createUID} from "@common/utils";
+import {intToDateString} from "@common/utils/time";
+import {getAppPath} from "@common/utils/appPath";
+import {useReadGlobalConfigFile, useUpdateGlobalConfigFile} from "@src/hooks/useGlobalConfigActionHooks";
+import {get} from "lodash";
 
 function ResumeAction(){
     const history = useHistory();
     const [showModal, setShowModal] = useState(false);
     const base: TSResume.Base = useSelector((state: any) => state.resumeModel.base);
     const work: TSResume.Work = useSelector((state: any) => state.resumeModel.work);
+    const resume = useSelector((state: any) => state.resumeModel);
+    const readAppConfigThemeFile = useReadGlobalConfigFile();
+    const updateGlobalConfigFile = useUpdateGlobalConfigFile();
+
     // 返回首页
     const onBack = () => history.push(ROUTER.root);
+
+    const exportPdf = () => {
+        toPrintPdf(`${base?.username} + ${base?.school} + ${work?.job}`);
+        setShowModal(false);
+        readAppConfigThemeFile().then((value: {[key: string]: any}) => {
+            if(value?.resumeSavePath){
+                saveResumeJson(value?.resumeSavePath);
+            } else {
+                getAppPath().then((appPath: string) => {
+                    updateGlobalConfigFile('resumeSavePath', `${appPath}resumeCache`);
+                    saveResumeJson(`${appPath}resumeCache`);
+                })
+            }
+        })
+    }
+
+    const saveResumeJson = (resumeSavePath: string) => {
+        const date = intToDateString(new Date().valueOf(), "_");
+        const prefix = `${date}_${base?.username}_${base?.school}_${work?.job}_${createUID()}.json`;
+        if(resumeSavePath && resumeSavePath.search('resumeCache') > -1){
+            fileAction?.write(`${resumeSavePath}/${prefix}`, resume, 'utf8');
+        } else {
+            fileAction?.mkdirDir(`${resumeSavePath}/resumeCache`).then((path) => {
+                if(path) {
+                    fileAction?.write(`${path}/${prefix}`, resume, 'utf8');
+                }
+            }).catch(() => {
+                console.log('创建文件夹失败！')
+            })
+        }
+    }
 
     return (
         <div styleName="actions">
@@ -31,10 +72,7 @@ function ResumeAction(){
                             },
                             submitBtn: {
                                 isShow: true,
-                                callback: () => {
-                                    toPrintPdf(`${base?.username}+${base?.school}+${work?.job}`);
-                                    setShowModal(false);
-                                }
+                                callback: exportPdf
                             }
                         }}/>
                 )
