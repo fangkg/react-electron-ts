@@ -13,6 +13,7 @@ import {getAppPath} from "@common/utils/appPath";
 import {useReadGlobalConfigFile, useUpdateGlobalConfigFile} from "@src/hooks/useGlobalConfigActionHooks";
 import {get} from "lodash";
 import {compilePath} from "@common/utils/router";
+import useClickAway from "@common/hook/useClickAway";
 
 function ResumeAction(){
     const history = useHistory();
@@ -23,6 +24,7 @@ function ResumeAction(){
     const resume = useSelector((state: any) => state.resumeModel);
     const readAppConfigThemeFile = useReadGlobalConfigFile();
     const updateGlobalConfigFile = useUpdateGlobalConfigFile();
+    const {ref, componentVisible, setComponentVisible} = useClickAway(false);
 
     // 返回首页
     const onBack = () => {
@@ -37,7 +39,8 @@ function ResumeAction(){
 
     const exportPdf = () => {
         toPrintPdf(`${base?.username} + ${base?.school} + ${work?.job}`);
-        setShowModal(false);
+        // setShowModal(false);
+        setComponentVisible(false);
         readAppConfigThemeFile().then((value: {[key: string]: any}) => {
             if(value?.resumeSavePath){
                 saveResumeJson(value?.resumeSavePath);
@@ -69,16 +72,17 @@ function ResumeAction(){
     return (
         <div styleName="actions">
             <div styleName="back" onClick={onBack}>返回</div>
-            <CusButton size="middle" className="export-btn" onClick={() => setShowModal(true)}>导出PDF</CusButton>
+            <CusButton size="middle" className="export-btn" onClick={() => setComponentVisible(true)}>导出PDF</CusButton>
             {
-                showModal && (
+                componentVisible && (
                     <CusModal.Confirm
+                        eleRef={ref}
                         title="确定要打印简历吗？"
                         description="请确保信息正确，目前只支持单页打印"
                         config={{
                             cancelBtn: {
                                 isShow: true,
-                                callback: () => setShowModal(false)
+                                callback: () => setComponentVisible(false)
                             },
                             submitBtn: {
                                 isShow: true,
