@@ -1,8 +1,13 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HappyPack = require('happypack');
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+const AddAssetHtmlWebpackPlugin = require('add-asset-html-webpack-plugin');
+const smp = new SpeedMeasurePlugin();
+const webpack = require('webpack');
 
-module.exports = {
+module.exports = smp.wrap({
     entry: {
         index: path.resolve(__dirname, '../app/renderer/app.tsx'),
         setting: path.resolve(__dirname, '../app/renderer/windowPages/setting/app.tsx')
@@ -26,16 +31,18 @@ module.exports = {
             {
                 test: /\.(js|jsx|ts|tsx)$/,
                 exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader'
-                }
+//                 use: {
+//                     loader: 'babel-loader'
+//                 }
+                loader: 'HappyPack/loader?id=visResumeMooKHappyPack'
             },
             {
                 test: /\.(jpg|png|jpeg|gif)$/,
                 use: [
                     {
-                        loader: 'file-loader',
+                        loader: 'url-loader',
                         options: {
+                            limit: 2048,
                             name: '[name]_[hash].[ext]',
                             outputPath: 'images/'
                         }
@@ -90,6 +97,21 @@ module.exports = {
 //                     to: path.resolve(__dirname, '../dist/appConfig')
 //                 }
             ]
+        }),
+        new HappyPack({
+            id: 'visResumeMooKHappyPack',
+            threads: 8,
+            loaders: [
+                {
+                    loader: 'babel-loader'
+                }
+            ]
+        }),
+        new AddAssetHtmlWebpackPlugin({
+            filePath: path.resolve(__dirname, '../dist/dll/reacts.dll.js')
+        }),
+        new webpack.DllReferencePlugin({
+            manifest: path.resolve(__dirname, '../dist/dll/reacts.manifest.json')
         })
     ]
-}
+})
