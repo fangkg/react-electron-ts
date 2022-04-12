@@ -3,12 +3,13 @@ import {Menu} from "electron";
 import path from 'path';
 import {app, BrowserWindow, ipcMain, dialog} from 'electron';
 import customMenu from "./customMenu";
+import "./userData";
 
 export interface CusBrowserWindow extends BrowserWindow {
     uid?: string;
 }
 
-function isDev(){
+export function isDev(){
     return process.env.NODE_ENV === 'development';
 }
 
@@ -18,8 +19,9 @@ function createWindow(){
     const mainWindow: CusBrowserWindow = new BrowserWindow({
         width: 1200,
         height: 800,
+        resizable: isDev(),
         webPreferences: {
-            devTools: true,
+            devTools: isDev(),
             nodeIntegration: true // 注入node模块
         }
     });
@@ -28,11 +30,11 @@ function createWindow(){
     const settingWindow: CusBrowserWindow = new BrowserWindow({
         width: 720,
         height: 240,
-        resizable: false,
+        resizable: isDev(),
         show: false,
         frame: false,
         webPreferences: {
-            devTools: true,
+            devTools: isDev(),
             nodeIntegration: true
         }
     })
@@ -84,7 +86,7 @@ app.on('ready', () => {
 const ROOT_PATH = path.join(app.getAppPath(), "../");
 // 监听渲染进程消息并回复
 ipcMain.on('get-root-path', (event, arg) => {
-    event.reply('reply-root-path', ROOT_PATH);
+    event.reply('reply-root-path', isDev() ? ROOT_PATH : __dirname);
 })
 
 ipcMain.on('open-save-resume-path', (event, arg) => {

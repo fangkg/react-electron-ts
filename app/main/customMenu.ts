@@ -1,5 +1,5 @@
 import _ from "lodash";
-import {CusBrowserWindow} from "./electron";
+import {CusBrowserWindow, isDev} from "./electron";
 import {MenuItemConstructorOptions, shell, app, MenuItem, BrowserWindow} from "electron";
 
 const customMenu: (MenuItemConstructorOptions | MenuItem)[] = [
@@ -85,22 +85,6 @@ const customMenu: (MenuItemConstructorOptions | MenuItem)[] = [
                         focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
                     }
                 }
-            },
-            {
-                label: '切换开发者工具',
-                role: 'toggleDevTools',
-                accelerator: (() => {
-                    if(process.platform === 'darwin'){
-                        return 'Alt+Command+I';
-                    } else {
-                        return 'Ctrl+Shift+I';
-                    }
-                })(),
-                click: (item, focusedWindow) => {
-                    if(focusedWindow){
-                        focusedWindow.webContents.openDevTools();
-                    }
-                }
             }
         ]
     },
@@ -144,6 +128,25 @@ const customMenu: (MenuItemConstructorOptions | MenuItem)[] = [
         ]
     }
 ];
+
+if(isDev()){
+    (customMenu[2]?.submenu as any).push({
+        label: '切换开发者工具',
+        role: 'toggleDevTools',
+        accelerator: (() => {
+            if(process.platform === 'darwin'){
+                return 'Alt+Command+I';
+            } else {
+                return 'Ctrl+Shift+I';
+            }
+        })(),
+        click: (item: any, focusedWindow: CusBrowserWindow) => {
+            if(focusedWindow){
+                focusedWindow.webContents.openDevTools();
+            }
+        }
+    })
+}
 
 if(process.platform === 'darwin'){
     const {name} = app;

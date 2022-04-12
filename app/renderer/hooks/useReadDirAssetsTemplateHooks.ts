@@ -12,7 +12,7 @@ export default function(){
         // 先获取应用地址
         getAppPath().then((appPath: string) => {
             // 从assets读取模板图片信息，构造模板列表
-            fileAction.readDir(`${appPath}assets/template`).then(async (files: string[]) => {
+            fileAction.readDir(`${appPath}/assets/template`).then(async (files: string[]) => {
                 // 构造模板列表
                 if(files.length > 0){
                     let templateList: TSTemplate.Item[] = [];
