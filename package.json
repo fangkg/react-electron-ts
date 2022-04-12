@@ -2,7 +2,7 @@
   "name": "visresumemook",
   "version": "1.0.0",
   "description": "桌面应用",
-  "main": "app/main/electron.ts",
+  "main": "./app/main/electron.ts",
   "scripts": {
     "start:main": "webpack --config ./webpack/webpack.main.dev.js && electron ./dist/electron.js",
     "start:render": "webpack-dev-server --config ./webpack/webpack.render.dev.js",

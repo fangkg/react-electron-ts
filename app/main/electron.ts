@@ -1,6 +1,12 @@
 // electron主入口
-const path = require('path');
-const {app, BrowserWindow, ipcMain, dialog} = require('electron');
+import {Menu} from "electron";
+import path from 'path';
+import {app, BrowserWindow, ipcMain, dialog} from 'electron';
+import customMenu from "./customMenu";
+
+export interface CusBrowserWindow extends BrowserWindow {
+    uid?: string;
+}
 
 function isDev(){
     return process.env.NODE_ENV === 'development';
@@ -9,7 +15,7 @@ function isDev(){
 
 function createWindow(){
     // 创建浏览器窗口
-    const mainWindow = new BrowserWindow({
+    const mainWindow: CusBrowserWindow = new BrowserWindow({
         width: 1200,
         height: 800,
         webPreferences: {
@@ -17,16 +23,26 @@ function createWindow(){
             nodeIntegration: true // 注入node模块
         }
     });
+    mainWindow.uid = "mainWindow";
 
-    const settingWindow = new BrowserWindow({
+    const settingWindow: CusBrowserWindow = new BrowserWindow({
         width: 720,
         height: 240,
         resizable: false,
+        show: false,
+        frame: false,
         webPreferences: {
             devTools: true,
             nodeIntegration: true
         }
     })
+    settingWindow.uid = "settingWindow";
+
+    // settingWindow.on('close', async (e) => {
+    //     settingWindow.hide();
+    //     e.preventDefault();
+    //     e.returnValue = false;
+    // })
 
     if(isDev()){
         // 开发环境下 加载运行在7001端口的react
@@ -36,7 +52,18 @@ function createWindow(){
         mainWindow.loadURL(`file://${path.join(__dirname, '../dist/index.html')}`);
         settingWindow.loadURL(`file://${path.join(__dirname, '../dist/setting.html')}`);
     }
-//     mainWindow.loadFile('index.html');
+
+    ipcMain.on('Electron:SettingWindow-hide-event', () => {
+        if(settingWindow.isVisible()){
+            settingWindow.hide();
+        }
+    })
+
+    ipcMain.on('Electron:SettingWindow-min-event', () => {
+        if(settingWindow.isVisible()){
+            settingWindow.minimize();
+        }
+    })
 }
 
 app.whenReady().then(() => {
@@ -46,6 +73,11 @@ app.whenReady().then(() => {
             createWindow();
         }
     })
+});
+
+app.on('ready', () => {
+    const menu = Menu.buildFromTemplate(customMenu);
+    Menu.setApplicationMenu(menu);
 })
 
 
