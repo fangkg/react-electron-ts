@@ -54,7 +54,13 @@
         "nsis",
         "msi"
       ]
-    }
+    },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://xxx/download/"
+      }
+    ]
   },
   "author": "developer",
   "license": "ISC",

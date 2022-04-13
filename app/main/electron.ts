@@ -4,6 +4,7 @@ import path from 'path';
 import {app, BrowserWindow, ipcMain, dialog} from 'electron';
 import customMenu from "./customMenu";
 import "./userData";
+const {autoUpdater} = require('electron-updater');
 
 export interface CusBrowserWindow extends BrowserWindow {
     uid?: string;
@@ -13,6 +14,16 @@ export function isDev(){
     return process.env.NODE_ENV === 'development';
 }
 
+function checkVersionUpdate(){
+    autoUpdater.autoDownload = false;
+    autoUpdater.checkForUpdates();
+    autoUpdater.on('error', () => {});
+    autoUpdater.on('checking-for-update', () => {});
+    autoUpdater.on('update-available', () => {});
+    autoUpdater.on('update-not-available', () => {});
+    autoUpdater.on('update-download', () => {});
+    autoUpdater.on('download-progress', () => {});
+}
 
 function createWindow(){
     // 创建浏览器窗口
@@ -80,6 +91,7 @@ app.whenReady().then(() => {
 app.on('ready', () => {
     const menu = Menu.buildFromTemplate(customMenu);
     Menu.setApplicationMenu(menu);
+    checkVersionUpdate();
 })
 
 
